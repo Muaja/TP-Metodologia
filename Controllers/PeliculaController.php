@@ -130,7 +130,7 @@ class PeliculaController extends Administrable
 		$pelicula->setPopularidad($popularidad);
 
 		if($this->peliculaDAO->edit($pelicula)) Functions::flash("Los datos se han guardado correctamente.","success");
-		else Functions::flash("Hubo un error al guardar los datos.","danger");
+		else Functions::flash("Se produjo un error al guardar los datos.","danger");
 		Functions::redirect("Pelicula","ShowListView");
 	}
 
@@ -189,7 +189,7 @@ class PeliculaController extends Administrable
 		$movie = $this->getMovieDetailsFromApi($idTMDB);
 		$flag = $this->peliculaDAO->add($movie);
 		if($flag) Functions::flash("Se agrego la pelicula correctamente.","success");
-		else Functions::flash("Hubo un error al agregar la pelicula.","danger");
+		else Functions::flash("Se produjo un error al agregar la pelicula.","danger");
 		return $flag;
 	}
 

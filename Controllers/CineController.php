@@ -107,7 +107,7 @@
 			$cine->setDireccion($direccion);
 			
 			if($this->cineDAO->edit($cine)) Functions::flash("Los datos se han guardado correctamente.","success");
-			else Functions::flash("Hubo un error al guardar los datos.","danger");
+			else Functions::flash("Se produjo un error al guardar los datos.","danger");
 			
 			Functions::redirect("Cine","ShowFichaView", $cine->getId());
 		}
@@ -123,7 +123,7 @@
 			$cine->setId($id);
 
 			if($this->cineDAO->remove($cine)) Functions::flash("El cine se ha eliminado correctamente.","success");
-			else Functions::flash("Hubo un error al eliminar el cine.");
+			else Functions::flash("Se produjo un error al eliminar el cine.");
 
 			Functions::redirect("Cine","ShowListView");
 		}
@@ -147,7 +147,7 @@
 			$cine->setDireccion($direccion);
 
 			if($this->cineDAO->add($cine)) Functions::flash("El cine se ha creado correctamente.","success");
-			else Functions::flash("Hubo un error al crear el cine.","danger");
+			else Functions::flash("Se produjo un error al crear el cine.","danger");
 
 			Functions::redirect("Cine","ShowListView");
 		}

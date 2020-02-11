@@ -57,7 +57,7 @@
             $idCine = $sala->getIdCine();
 
             if($this->salaDAO->remove($sala) != null) Functions::flash("La sala se ha eliminado correctamente.","success");
-            else Functions::flash("Hubo un error al eliminar la sala.","danger");
+            else Functions::flash("Se produjo un error al eliminar la sala.","danger");
             Functions::redirect("Cine", "ShowFichaView", $idCine);
         }
 
@@ -78,7 +78,7 @@
             $sala->setCapacidad($capacidad);
 
             if($this->salaDAO->add($sala) != null) Functions::flash("La sala se ha agregado correctamente.","success");
-            else Functions::flash("Hubo un error al agregar la sala.","danger");
+            else Functions::flash("Se produjo un error al agregar la sala.","danger");
             Functions::redirect("Cine", "ShowFichaView", $idCine);
         }
     }

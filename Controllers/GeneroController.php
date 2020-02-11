@@ -38,7 +38,7 @@
 					Functions::flash("Se agrego el genero ".$genero->getNombre().".");
 					$count++;
 				}					
-				else Functions::flash("Hubo un error al agregar un genero.","danger");
+				else Functions::flash("Se produjo un error al agregar un genero.","danger");
 			}
 			if($count > 0) Functions::flash("Se agregaron ".$count." generos correctamente.","info");
 			else Functions::flash("No existen mas generos para agregar de la API.","warning");

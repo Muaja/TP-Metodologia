@@ -177,7 +177,7 @@ class UsuarioController extends Administrable
 		// Fin imagen de perfil
 
 		if($this->usuarioDAO->edit($usuario)) Functions::flash("Los datos se han guardado correctamente.","success");
-		else Functions::flash("Hubo un error al guardar los datos.","danger");
+		else Functions::flash("Se produjo un error al guardar los datos.","danger");
 		Functions::redirect("Usuario","ShowProfileView", $usuario->getId());
 	}
 
@@ -234,7 +234,7 @@ class UsuarioController extends Administrable
 		if($this->usuarioDAO->add($usuario)) $this->Login($email, $password);
 		else 
 		{
-			Functions::flash("Hubo un error al registrar el usuario. Intenta nuevamente.","danger");
+			Functions::flash("Se produjo un error al registrar el usuario. Intenta nuevamente.","danger");
 			Functions::redirect("Register");
 		}		
 	}
@@ -256,7 +256,7 @@ class UsuarioController extends Administrable
 		if($_SESSION["loggedUser"]->getId() == $id) $this->Logout();
 
 		if($this->usuarioDAO->remove($usuario)) Functions::flash("El usuario seleccionado fue eliminado.","success");
-		else Functions::flash("Hubo un error al eliminar el usuario.","danger");
+		else Functions::flash("Se produjo un error al eliminar el usuario.","danger");
 	}
 
 	public function Login($email, $password)
@@ -444,7 +444,7 @@ class UsuarioController extends Administrable
 		$usuario->getId_Rol() == 1 ? $usuario->setId_Rol(2) : $usuario->setId_Rol(1);
 		
 		if($this->usuarioDAO->edit($usuario)) Functions::flash("Se han cambiado los accesos de ".$usuario->getNombre().$usuario->getApellido().".");
-		else Functions::flash("Hubo un error al cambiar los accesos de ".$usuario->getNombre().$usuario->getApellido().".","danger");
+		else Functions::flash("Se produjo un error al cambiar los accesos de ".$usuario->getNombre().$usuario->getApellido().".","danger");
 		
 		Functions::redirect("Usuario","ShowProfileView", $usuario->getId());
 	}

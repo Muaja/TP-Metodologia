@@ -68,7 +68,7 @@ class FuncionController extends Administrable
 			$idCine = $funcion->getIdCine();
 
 			if($this->funcionDAO->remove($funcion) != null) Functions::flash("La funcion se ha eliminado correctamente.","success");
-			else Functions::flash("Hubo un error al eliminar la funcion.", "danger");			
+			else Functions::flash("Se produjo un error al eliminar la funcion.", "danger");			
 			Functions::redirect("Cine", "ShowFichaView", $idCine);
 		}
 
@@ -112,7 +112,7 @@ class FuncionController extends Administrable
 			$funcion->setFechaHora($fechaHora);
 
 			if($this->funcionDAO->add($funcion) != null) Functions::flash("La funcion se ha agregado correctamente.","success");
-			else Functions::flash("Hubo un error al agregar la funcion.","danger");
+			else Functions::flash("Se produjo un error al agregar la funcion.","danger");
 			Functions::redirect("Cine", "ShowFichaView", $idCine);
 		}
 
