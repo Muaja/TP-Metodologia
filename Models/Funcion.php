@@ -64,13 +64,15 @@
 			return $this;
 		}
 
-		public function getFecha(){
+		public function getFecha()
+		{
 			$timestamp = $this->getFechaHora();
 			$datetime = explode(" ",$timestamp);
 			return $datetime[0];
 		}
 
-		public function getHora(){
+		public function getHora()
+		{
 			$timestamp = $this->getFechaHora();
 			$datetime = explode(" ",$timestamp);
 			return $datetime[1];	

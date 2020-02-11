@@ -16,12 +16,7 @@
 			$this->id = $id;
 			return $this;
 		}
-	
-		/**
-		 * Getter for Nombre
-		*
-		* @return [type]
-		*/
+
 		public function getNombre()
 		{
 			return $this->nombre;
