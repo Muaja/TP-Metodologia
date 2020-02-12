@@ -14,11 +14,10 @@
 		{
 			try
 			{
-				$query = "INSERT INTO ".$this->tableName." (id_usuario, fecha_hora, precio, cantidad, descuento, total) VALUES (:id_usuario, :fecha_hora, :precio, :cantidad, :descuento, :total);";
+				$query = "INSERT INTO ".$this->tableName." (id_usuario, fecha_hora, cantidad, descuento, total) VALUES (:id_usuario, :fecha_hora, :cantidad, :descuento, :total);";
 				
 				$parameters["id_usuario"]= $compra->getIdUsuario();
 				$parameters["fecha_hora"]=$compra->getFechaHora();
-				$parameters["precio"]=$compra->getPrecio();
 				$parameters["cantidad"]=$compra->getCantidad();
 				$parameters["descuento"]=$compra->getDescuento();
 				$parameters["total"]=$compra->getTotal();
@@ -84,7 +83,6 @@
 					$compra->setId($row["id_compra"]);
 					$compra->setIdUsuario($row["id_usuario"]);
 					$compra->setFechaHora($row["fecha_hora"]);
-					$compra->setPrecio($row["precio"]);
 					$compra->setCantidad($row["cantidad"]);
 					$compra->setDescuento($row["descuento"]);
 					$compra->setTotal($row["total"]);
@@ -112,7 +110,6 @@
 					$compra->setId($row["id_compra"]);
 					$compra->setIdUsuario($row["id_usuario"]);
 					$compra->setFechaHora($row["fecha_hora"]);
-					$compra->setPrecio($row["precio"]);
 					$compra->setCantidad($row["cantidad"]);
 					$compra->setDescuento($row["descuento"]);
 					$compra->setTotal($row["total"]);
@@ -141,7 +138,6 @@
 					$compra->setId($row["id_compra"]);
 					$compra->setIdUsuario($row["id_usuario"]);
 					$compra->setFechaHora($row["fecha_hora"]);
-					$compra->setPrecio($row["precio"]);
 					$compra->setCantidad($row["cantidad"]);
 					$compra->setDescuento($row["descuento"]);
 					$compra->setTotal($row["total"]);
@@ -159,11 +155,10 @@
 		{
 			try
 			{
-				$query = "UPDATE ".$this->tableName." SET id_compra = :id_compra, id_usuario = :id_usuario, fecha_hora = :fecha_hora, precio = :precio, cantidad = :cantidad, descuento = :descuento, total = :total WHERE id_compra = :id_compra;";
+				$query = "UPDATE ".$this->tableName." SET id_compra = :id_compra, id_usuario = :id_usuario, fecha_hora = :fecha_hora, cantidad = :cantidad, descuento = :descuento, total = :total WHERE id_compra = :id_compra;";
 
 				$parameters["id_usuario"]=$compra->getIdUsuario();
 				$parameters["fecha_hora"]=$compra->getFechaHora();
-				$parameters["precio"]=$compra->getPrecio();
 				$parameters["cantidad"]=$compra->getCantidad();
 				$parameters["descuento"]=$compra->getDescuento();
 				$parameters["total"]=$compra->getTotal();

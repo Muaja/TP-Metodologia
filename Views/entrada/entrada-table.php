@@ -3,10 +3,10 @@
         <tr>
             <th>#</th>
             <th>Pelicula</th>
-            <th>N.Funcion</th>
-            <th>N.Compra</th>
+            <th># Funcion</th>
+            <th># Compra</th>
             <th>QR</th>
-            <th>Entrada</th>
+            <th>Ver</th>
         </tr>
     </thead>
     <tbody>
@@ -21,7 +21,7 @@
                 $pelicula->setId($idPelicula);
                 $pelicula = $this->peliculaDAO->getPelicula($pelicula);
             ?>
-            <td class="align-middle"><b><?php echo $pelicula->getTitulo(); ?></b></a></td>
+            <td class="align-middle"><img src="<?php echo $pelicula->getPoster(); ?>"  height="35" width="35" class="rounded-circle z-depth-0 mr-2" alt="pelicula image"><b><?php echo $pelicula->getTitulo(); ?></b></a></td>
             <td class="align-middle"><?php echo $funcion->getId(); ?></td>
             <td class="align-middle"><?php echo $entrada->getIdCompra(); ?></td>
             <td class="align-middle"><a href="#modal<?php echo $entrada->getId();?>" class="view" title="" data-toggle="modal" data-original-title="View Details"><img src="https://chart.googleapis.com/chart?chs=60x60&cht=qr&chl=<?php echo $entrada->getQr(); ?>" class="rounded-circle z-depth-0" alt="qr"></a></td>

@@ -32,17 +32,16 @@
         }
 
         require_once("navbar/navbar-team.php");
-        require_once("navbar/navbar-search.php");
         echo "</div>";
-
+        //require_once("navbar/navbar-search.php");
+        require_once("navbar/navbar-carrito.php");
         require_once("navbar/navbar-dropdown.php");
       } 
       else 
       {
         require_once("navbar/navbar-team.php");
-        require_once("navbar/navbar-search.php");
         echo "</div>";
-
+        //require_once("navbar/navbar-search.php");
         require_once("navbar/navbar-anon.php");
       }
       ?>

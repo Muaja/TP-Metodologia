@@ -7,6 +7,7 @@
 	use DAO\FuncionDAO as FuncionDAO;
 	use DAO\PeliculaDAO as PeliculaDAO;
 	use DAO\EntradaDAO as EntradaDAO;
+	use DAO\CarritoDAO as CarritoDAO;
 	use Models\Compra as Compra;
 	use Models\Cine as Cine;
 	use Models\Sala as Sala;
@@ -14,6 +15,7 @@
 	use Models\Usuario as Usuario;
 	use Models\Entrada as Entrada;
 	use Models\Pelicula as Pelicula;
+	use Models\Carrito as Carrito;
 
 	class CompraController extends Administrable
 	{
@@ -23,6 +25,7 @@
 		private $funcionDAO;
 		private $peliculaDAO;
 		private $entradaDAO;
+		private $carritoDAO;
 
 		function __construct()
 		{
@@ -32,183 +35,158 @@
 			$this->funcionDAO = new FuncionDAO();
 			$this->peliculaDAO = new PeliculaDAO();
 			$this->entradaDAO = new EntradaDAO();
+			$this->carritoDAO = new CarritoDAO();
 		}
 
-		public function Pay($idFuncion,$cantidad)
+		public function Submit($idFuncion,$cantidad,$action)
+		{
+			if (!$this->loggedIn()) Functions::redirect("Login");
+
+			if($action == "ADD")
+			{
+				$params = array();
+				array_push($params,$idFuncion);
+				array_push($params,$cantidad);
+				Functions::redirect("Carrito","Add",$params);
+			}
+			else if($action == "BUY")
+			{
+				$carrito = new Carrito();
+				$carrito->setIdUsuario($_SESSION['loggedUser']->getId());
+				$carrito->setIdFuncion($idFuncion);
+				$carrito->setCantidad($cantidad);
+				$this->ShowPayView($carrito);
+			}
+		}
+
+		public function ShowPayView($carrito = null)
 		{
 			if(!$this->loggedIn()) Functions::redirect("Home");
 
-			//Datos funcion
+			if($carrito == null)
+			{
+				$carritoList = $_SESSION['carrito'];
+			}
+			else
+			{
+				$carritoList = array();
+				array_push($carritoList,$carrito);
+			}
 			$funcion = new Funcion();
-			$funcion->setId($idFuncion);
-			$funcion = $this->funcionDAO->getFuncion($funcion);
-			if($funcion == null)
-			{
-				Functions::flash("La funcion seleccionada no existe.","warning");
-				Functions::redirect("Home");
-			}
-
-			//Datos pelicula
 			$pelicula = new Pelicula();
-			$pelicula->setId($funcion->getIdPelicula());
-			$pelicula = $this->peliculaDAO->getPelicula($pelicula);
-			if($pelicula == null)
-			{
-				Functions::flash("La pelicula seleccionada no existe.","warning");
-				Functions::redirect("Home");
-			}
-
-			$fechaHora = $funcion->getFechaHora();
-
-			//Datos cine			
-			$idCine = $funcion->getIdCine();
 			$cine = new Cine();
-			$cine->setId($idCine);
-			$cine = $this->cineDAO->getCine($cine);
-			if($cine == null)
-			{
-				Functions::flash("El cine seleccionado no existe.","warning");
-				Functions::redirect("Home");
-			}
-
-			//Datos sala
-			$idSala = $funcion->getIdSala();
 			$sala = new Sala();
-			$sala->setId($idSala);
-			$sala = $this->salaDAO->getSala($sala);
-			if($sala == null)
-			{
-				Functions::flash("La sala seleccionada no existe.","warning");
-				Functions::redirect("Home");
-			}
-			$precio = $sala->getPrecio();
-
-			//Calculos
-			$subtotal = ($precio*$cantidad);
-			$descuentoPorcent = $this->calcularDescuento($fechaHora, $cantidad);
-			$descuento= $subtotal*($descuentoPorcent/100);
-			$total = $subtotal-$descuento;
-
+			$_SESSION['carrito'] = $carritoList;
 			require_once(VIEWS_PATH."compra/compra.php");
 		}
 
-		public function Payout($idFuncion,$cantidad,$name,$mmyy,$number,$cvc)
+		public function Pay($name,$mmyy,$number,$cvc)
 		{
 			if(!$this->loggedIn()) Functions::redirect("Home");
-			
+
 			$name = Functions::validateData($name);
 			$mmyy = Functions::validateData($mmyy);
 			$number = Functions::validateData($number);
 			$cvc = Functions::validateData($cvc);
 			if(!$this->validatePay($name,$mmyy,$number,$cvc))
 			{			
-				$params = array();
-				array_push($params,$idFuncion);
-				array_push($params,$cantidad);
-				Functions::flash("Los datos de la tarjeta son incorrectos.","warning");
-				Functions::redirect("Compra","Pay",$params);
+				Functions::flash("Los datos de la tarjeta son incorrectos. Intenta nuevamente","warning");
+				Functions::redirect("Compra","ShowPayView");
 			}
-
-			//Datos funcion
+			
+			$carritoList = $_SESSION['carrito'];
 			$funcion = new Funcion();
-			$funcion->setId($idFuncion);
-			$funcion = $this->funcionDAO->getFuncion($funcion);
-			if($funcion == null)
-			{
-				Functions::flash("La funcion seleccionada no existe.","warning");
-				Functions::redirect("Home");
-			}
-
-			//Datos pelicula
-			$idPelicula = $funcion->getIdPelicula();
 			$pelicula = new Pelicula();
-			$pelicula->setId($idPelicula);
-			$pelicula = $this->peliculaDAO->getPelicula($pelicula);
-			if($pelicula == null)
-			{
-				Functions::flash("La pelicula seleccionada no existe.","warning");
-				Functions::redirect("Home");
-			}
-
-			$fechaHora = $funcion->getFechaHora();
-
-			//Datos cine			
-			$idCine = $funcion->getIdCine();
 			$cine = new Cine();
-			$cine->setId($idCine);
-			$cine = $this->cineDAO->getCine($cine);
-			if($cine == null)
-			{
-				Functions::flash("El cine seleccionado no existe.","warning");
-				Functions::redirect("Home");
-			}
-
-			//Datos sala
-			$idSala = $funcion->getIdSala();
-			$sala = new Sala();
-			$sala->setId($idSala);
-			$sala = $this->salaDAO->getSala($sala);
-			if($sala == null)
-			{
-				Functions::flash("La sala seleccionada no existe.","warning");
-				Functions::redirect("Home");
-			}
-			$precio = $sala->getPrecio();
+			$sala = new Sala();			
 
 			//Calculos
-			$subtotal = ($precio*$cantidad);
-			$descuentoPorcent = $this->calcularDescuento($fechaHora, $cantidad);
-			$descuento= $subtotal*($descuentoPorcent/100);
-			$total = $subtotal-$descuento;
+			$subtotal = 0;
+			$descuento= 0;
+			$total = 0;
+			$cantidadtotal = 0;
+			foreach($carritoList as $carrito)
+			{
+				$idFuncion = $carrito->getIdFuncion();
+				$cantidad = $carrito->getCantidad();
+
+				//Datos funcion
+				$funcion->setId($idFuncion);
+				$funcion = $this->funcionDAO->getFuncion($funcion);
+
+				//Datos pelicula
+				$idPelicula = $funcion->getIdPelicula();
+				$pelicula->setId($idPelicula);
+				$pelicula = $this->peliculaDAO->getPelicula($pelicula);
+
+				//Datos cine			
+				$idCine = $funcion->getIdCine();
+				$cine->setId($idCine);
+				$cine = $this->cineDAO->getCine($cine);
+
+				//Datos sala
+				$idSala = $funcion->getIdSala();
+				$sala->setId($idSala);
+				$sala = $this->salaDAO->getSala($sala);
+
+				//Calculos
+				$subtotalcarrito = ($sala->getPrecio()*$cantidad);
+				$descuentocarrito = $subtotalcarrito*($this->calcularPorcDescuento($funcion->getFechaHora(), $cantidad)/100);
+
+				$subtotal += $subtotalcarrito;
+				$descuento += $descuentocarrito;
+				$total += ($subtotalcarrito-$descuentocarrito);
+				$cantidadtotal += $cantidad;
+
+				//Generar entradas
+				$listCompras = $this->compraDAO->getByUsuario($_SESSION['loggedUser']);
+				if($listCompras == null) 
+				{
+					Functions::flash("Se produjo un error al registrar la compra. Tu pago será devuelto.","danger");
+					Functions::redirect("Funcion","ShowFuncionesPelicula", $idPelicula);
+				}
+				$compra = array_pop($listCompras);
+				$idCompra = $compra->getId();
+
+				$listEntradas = array();
+
+				for ($i = 0; $i < $cantidad; $i++)
+				{
+					$entrada = new Entrada();
+					$entrada->setIdCompra($idCompra);
+					$entrada->setIdFuncion($idFuncion);
+					$entrada->setQr($idCine."-".$idSala."-".$idFuncion."-".$idCompra."-".$i);
+					array_push($listEntradas, $entrada);
+					if(!$this->entradaDAO->add($entrada)) Functions::flash("Se produjo un error al registrar la entrada de ".$pelicula->getTitulo().".","danger");	
+					else Functions::flash("Se emitió una entrada para ".$pelicula->getTitulo()." el dia ".$funcion->getFechaHora().".", "success");
+				}
+				
+				// $subject = "Movie Pass - Tus entradas para ver ".$pelicula->getTitulo();
+
+				// $emailDetails=array();
+				// $emailDetails['pelicula'] = $pelicula->getTitulo();
+				// $emailDetails['fechaHora'] = $funcion->getFechaHora();
+				// $emailDetails['cine'] = $cine->getNombre();
+				// $emailDetails['sala'] = $sala->getNombre();
+				// $emailDetails['idCompra'] = $idCompra;		
+				// Functions::sendEmail($_SESSION['loggedUser']->getEmail(),$subject, $this->compraMailBody($emailDetails));
+			}
 
 			//Guardar compra
 			$compra = new Compra();
 			$compra->setIdUsuario($_SESSION['loggedUser']->getId());
 			$compra->setFechaHora(date("Y-m-d H:i:s"));
-			$compra->setPrecio($precio);
-			$compra->setCantidad($cantidad);
+			$compra->setCantidad($cantidadtotal);
 			$compra->setDescuento($descuento);
 			$compra->setTotal($total);
 			if(!$this->compraDAO->add($compra)) 
 			{
 				Functions::flash("Se produjo un error al registrar la compra. Tu pago será devuelto.","danger");
-				Functions::redirect("Funcion","ShowFuncionesPelicula", $idPelicula);
+				Functions::redirect("Funcion","ShowMovies");
 			}
-
-			//Generar entradas
-			$listCompras = $this->compraDAO->getByUsuario($_SESSION['loggedUser']);
-			if($listCompras == null) 
-			{
-				Functions::flash("Se produjo un error al registrar la compra. Tu pago será devuelto.","danger");
-				Functions::redirect("Funcion","ShowFuncionesPelicula", $idPelicula);
-			}
-			$compra = array_pop($listCompras);
-			$idCompra = $compra->getId();
-
-			$listEntradas = array();
-
-			for ($i = 1; $i <= $cantidad; $i++)
-			{
-				$entrada = new Entrada();
-				$entrada->setIdCompra($idCompra);
-				$entrada->setIdFuncion($idFuncion);
-				$entrada->setQr($idCine."-".$idSala."-".$idFuncion."-".$idCompra."-".$i);
-				array_push($listEntradas, $entrada);
-				if(!$this->entradaDAO->add($entrada)) Functions::flash("Se produjo un error al registrar la entrada ".$i.".","danger");	
-				else Functions::flash("Se registro la entrada ".$i." para ver ".$pelicula->getTitulo()."!", "success");
-			}
-			
-			$subject = "Movie Pass - Tus entradas para ver ".$pelicula->getTitulo();
-
-			$emailDetails=array();
-			$emailDetails['pelicula'] = $pelicula->getTitulo();
-			$emailDetails['fechaHora'] = $fechaHora;
-			$emailDetails['cine'] = $cine->getNombre();
-			$emailDetails['sala'] = $sala->getNombre();
-			$emailDetails['idCompra'] = $idCompra;		
-			Functions::sendEmail($_SESSION['loggedUser']->getEmail(),$subject, $this->compraMailBody($emailDetails));
 			
 			Functions::redirect("Entrada","ShowListView", $_SESSION['loggedUser']->getId());
+			unset($_SESSION['carrito']);
 		}
 
 		private function validatePay($name,$mmyy,$number,$cvc)
@@ -231,7 +209,7 @@
 			return true;
 		}
 		
-		private function calcularDescuento($fechaHora, $cantidad)
+		private function calcularPorcDescuento($fechaHora, $cantidad)
 		{
 			$descuento = 0;
 			$day = date('w', strtotime($fechaHora));

@@ -6,6 +6,13 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
+CREATE TABLE `Carritos` (
+  `id_carrito` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `id_funcion` int(11) NOT NULL,
+  `cantidad` smallint(6) NOT NULL,
+  `deleted` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `Cines` (
   `id_cine` int(11) NOT NULL,
@@ -18,7 +25,6 @@ CREATE TABLE `Compras` (
   `id_compra` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
   `fecha_hora` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `precio` int(11) NOT NULL,
   `cantidad` smallint(6) NOT NULL,
   `descuento` tinyint(4) NOT NULL,
   `total` float NOT NULL,
@@ -96,6 +102,8 @@ CREATE TABLE `Usuarios` (
   `deleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+ALTER TABLE `Carritos`
+  ADD PRIMARY KEY (`id_carrito`);
 
 ALTER TABLE `Cines`
   ADD PRIMARY KEY (`id_cine`),
@@ -137,6 +145,8 @@ ALTER TABLE `Usuarios`
   ADD UNIQUE KEY `UNQ_email` (`email`),
   ADD UNIQUE KEY `UNQ_dni` (`dni`) USING BTREE;
 
+ALTER TABLE `Carritos`
+  MODIFY `id_carrito` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `Cines`
   MODIFY `id_cine` int(11) NOT NULL AUTO_INCREMENT;
