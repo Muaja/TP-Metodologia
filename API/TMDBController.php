@@ -32,8 +32,7 @@ class TMDBController
                CURLOPT_MAXREDIRS => 10,
                CURLOPT_TIMEOUT => 30,
                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-               CURLOPT_CUSTOMREQUEST => "GET",
-               CURLOPT_POSTFIELDS => "{}",
+               CURLOPT_CUSTOMREQUEST => "GET"
             ));
          default:
             if ($data)
@@ -42,10 +41,6 @@ class TMDBController
    
       // EXECUTE:
       $result = curl_exec($curl);
-      if(!$result)
-      {
-         die("Connection Failure");
-      }
       curl_close($curl);
       return $result;
    }
