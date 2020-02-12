@@ -39,8 +39,39 @@
             </ul>
         </div>
         <div class="col-md-10 col-lg-6 offset-md-1 bg-light rounded p-4 my-4 shadow">
-            <tr><h4 class="border-bottom border-gray pb-2 mb-3">Lista de entradas</h4></tr>
-            <?php require_once(VIEWS_PATH."entrada/entrada-table.php"); ?>
+            <h4 class="pb-2 mb-3">Lista de entradas</h4>
+            <table id="sortable" class="table table-striped table-responsive-md align-center">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Pelicula</th>
+                        <th># Funcion</th>
+                        <th># Compra</th>
+                        <th>QR</th>
+                        <th>Ver</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($entradaList as $entrada) { ?>
+                    <tr>
+                        <td class="align-middle"><?php echo $entrada->getId(); ?></td>
+                        <?php 
+                            $idFuncion = $entrada->getIdFuncion();
+                            $funcion->setId($idFuncion);
+                            $funcion = $this->funcionDAO->getFuncion($funcion);
+                            $idPelicula = $funcion->getIdPelicula();
+                            $pelicula->setId($idPelicula);
+                            $pelicula = $this->peliculaDAO->getPelicula($pelicula);
+                        ?>
+                        <td class="align-middle"><img src="<?php echo $pelicula->getPoster(); ?>"  height="35" width="35" class="rounded-circle z-depth-0 mr-2" alt="pelicula image"><b><?php echo $pelicula->getTitulo(); ?></b></a></td>
+                        <td class="align-middle"><?php echo $funcion->getId(); ?></td>
+                        <td class="align-middle"><?php echo $entrada->getIdCompra(); ?></td>
+                        <td class="align-middle"><a href="#modal<?php echo $entrada->getId();?>" class="view" title="" data-toggle="modal" data-original-title="View Details"><img src="https://chart.googleapis.com/chart?chs=60x60&cht=qr&chl=<?php echo $entrada->getQr(); ?>" class="rounded-circle z-depth-0" alt="qr"></a></td>
+                        <td class="align-middle"><a href="#modal<?php echo $entrada->getId();?>" class="view" title="" data-toggle="modal" data-original-title="View Details"><h4><i class="fa fa-arrow-circle-right"></i></h4></a></td>
+                    </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
@@ -53,3 +84,17 @@
         } );
     } );
 </script>
+
+<!-- Modal que muestra entrada -->
+<?php 
+foreach($entradaList as $entrada) 
+{
+    $idFuncion = $entrada->getIdFuncion();
+    $funcion->setId($idFuncion);
+    $funcion = $this->funcionDAO->getFuncion($funcion);
+    $idPelicula = $funcion->getIdPelicula();
+    $pelicula->setId($idPelicula);
+    $pelicula = $this->peliculaDAO->getPelicula($pelicula);
+    require(VIEWS_PATH."entrada/entrada.php");
+}
+?>
