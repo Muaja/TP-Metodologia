@@ -60,7 +60,7 @@
                 $mail->Port       = 587;                        // TCP port to connect to
 
                 //Recipients
-                $mail->setFrom('moviepass@noreply.com', 'Movie Pass');
+                $mail->setFrom('moviepass.arg@gmail.com', 'Movie Pass');
                 $mail->addAddress($shippingAddress);
 
                 // Content
