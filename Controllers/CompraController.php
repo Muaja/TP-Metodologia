@@ -185,6 +185,7 @@
 				Functions::redirect("Funcion","ShowMovies");
 			}
 			
+			if(!$this->carritoDAO->vaciarCarrito($_SESSION['loggedUser']->getId())) Functions::flash("Tu carrito de compras no pudo ser vaciado.","warning");
 			Functions::redirect("Entrada","ShowListView", $_SESSION['loggedUser']->getId());
 			unset($_SESSION['carrito']);
 		}

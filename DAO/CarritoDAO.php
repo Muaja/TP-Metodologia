@@ -125,6 +125,33 @@
 			}
 		}
 
+		public function vaciarCarrito($idUsuario)
+		{
+			try
+			{
+				$list = array();
+				$query = "UPDATE ".$this->tableName." SET deleted = 1 WHERE id_usuario = :id_usuario;";
+				$parameters["id_usuario"]=$idUsuario;
+				$this->connection = Connection::GetInstance();
+				$resultSet = $this->connection->Execute($query,$parameters);
+				
+				foreach ($resultSet as $row)
+				{
+					$carrito = new Carrito();
+					$carrito->setId($row["id_carrito"]);
+					$carrito->setIdUsuario($row["id_usuario"]);
+					$carrito->setIdFuncion($row["id_funcion"]);
+					$carrito->setCantidad($row["cantidad"]);
+					array_push($list, $carrito);
+				}
+				return $list;
+			}
+			catch(Exception $ex)
+			{
+				return null;
+			}
+		}
+
 		public function edit($carrito)
 		{
 			try
