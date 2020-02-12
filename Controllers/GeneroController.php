@@ -23,25 +23,34 @@
 	
 			$get_data = TMDBController::callAPI('GET', API . '/genre/movie/list', $arrayReque);
 	
-			$arrayToDecode = json_decode($get_data, true);
-	
-			$count = 0;
-			foreach ($arrayToDecode["genres"] as $generoValues) 
+			if($get_data == null) Functions::flash("Se produjo un error de conexion con la API.","danger");
+			else
 			{
-				$genero = new Genero();
-				$genero->setId($generoValues["id"]);
-				$genero->setNombre($generoValues["name"]);
-				if($this->generoDAO->getGenero($genero) != null) continue;
-					
-				if($this->generoDAO->add($genero))
+				$arrayToDecode = json_decode($get_data, true);
+		
+				if(is_array($arrayToDecode) && !empty($arrayToDecode))
 				{
-					Functions::flash("Se agrego el genero ".$genero->getNombre().".");
-					$count++;
-				}					
-				else Functions::flash("Se produjo un error al agregar un genero.","danger");
+					$count = 0;
+
+					foreach ($arrayToDecode["genres"] as $generoValues) 
+					{
+						$genero = new Genero();
+						$genero->setId($generoValues["id"]);
+						$genero->setNombre($generoValues["name"]);
+						if($this->generoDAO->getGenero($genero) != null) continue;
+							
+						if($this->generoDAO->add($genero))
+						{
+							Functions::flash("Se agrego el genero ".$genero->getNombre().".");
+							$count++;
+						}					
+						else Functions::flash("Se produjo un error al agregar un genero.","danger");
+					}
+
+					if($count > 0) Functions::flash("Se agregaron ".$count." generos correctamente.","info");
+					else Functions::flash("No existen mas generos para agregar de la API.","warning");
+				}	
 			}
-			if($count > 0) Functions::flash("Se agregaron ".$count." generos correctamente.","info");
-			else Functions::flash("No existen mas generos para agregar de la API.","warning");
 
 			Functions::redirect("System");
 		}

@@ -8,6 +8,7 @@
 
 namespace Controllers;
 
+use \Exception as Exception;
 use API\TMDBController as TMDBController;
 use DAO\PeliculaDAO as PeliculaDAO;
 use DAO\GeneroDAO as GeneroDAO;
@@ -38,18 +39,13 @@ class PeliculaController extends Administrable
 		require_once(VIEWS_PATH . "pelicula/pelicula-list.php");
 	}
 
-	public function ShowApiMovies()
+	public function ShowApiMovies($page = 1)
 	{
 		if(!$this->loggedIn()) Functions::redirect("Home");
 		if(!$this->isMainAdmin()) Functions::redirect("Home");
 
 		$peliculaList = array();
-		$page = 1;
-		while(count($peliculaList) == 0)
-		{
-			$peliculaList= $this->getNowPlayingMoviesFromApi($page);
-			$page++;
-		}
+		$peliculaList = $this->getNowPlayingMoviesFromApi($page);
 		require_once(VIEWS_PATH."pelicula/pelicula-api.php");
 	}
 
@@ -134,12 +130,10 @@ class PeliculaController extends Administrable
 		Functions::redirect("Pelicula","ShowListView");
 	}
 
-	private function getNowPlayingMoviesFromApi($page = NULL)
+	private function getNowPlayingMoviesFromApi($page = 1)
 	{
 		if(!$this->loggedIn()) Functions::redirect("Home");
 		if(!$this->isAdmin()) Functions::redirect("Home");
-
-		if($page == NULL) $page = 1;
 
 		$peliculaList = array();
 
@@ -147,86 +141,87 @@ class PeliculaController extends Administrable
 
 		$get_data = TMDBController::callAPI('GET', API . '/movie/now_playing', $arrayReque);
 
-		$arrayToDecode = json_decode($get_data, true);
-
-		foreach ($arrayToDecode["results"] as $valuesArray) 
+		if($get_data == null) Functions::flash("Se produjo un error de conexion con la API.","danger");
+		else
 		{
-			$pelicula = new Pelicula();
-			$pelicula->setIdTMDB($valuesArray["id"]);
-			if($this->peliculaDAO->getByIdTMDB($pelicula) == NULL)
-			{
-				if($valuesArray["poster_path"] != NULL)
-				{
-					$posterPath = "https://image.tmdb.org/t/p/w500".$valuesArray["poster_path"];
-				}
-				else 
-				{
-					$posterPath = FRONT_ROOT.IMG_PATH."noImage.jpg";
-				}
-				$pelicula->setPoster($posterPath);
-		
-				$generos = array();
-				
-				$pelicula->setTitulo($valuesArray["title"]);
-				$pelicula->setPopularidad($valuesArray["vote_average"]);
-				$pelicula->setFechaDeEstreno($valuesArray["release_date"]);
+			$arrayToDecode = json_decode($get_data, true);
 
-				array_push($peliculaList, $pelicula);				
+			if(is_array($arrayToDecode) && !empty($arrayToDecode))
+			{
+				foreach ($arrayToDecode["results"] as $valuesArray)
+				{
+					$pelicula = new Pelicula();
+					$pelicula->setIdTMDB($valuesArray["id"]);
+					if($this->peliculaDAO->getByIdTMDB($pelicula) == NULL)
+					{
+						if($valuesArray["poster_path"] != NULL)
+						{
+							$posterPath = "https://image.tmdb.org/t/p/w500".$valuesArray["poster_path"];
+						}
+						else 
+						{
+							$posterPath = FRONT_ROOT.IMG_PATH."noImage.jpg";
+						}
+						$pelicula->setPoster($posterPath);
+				
+						$generos = array();
+						
+						$pelicula->setTitulo($valuesArray["title"]);
+						$pelicula->setPopularidad($valuesArray["vote_average"]);
+						$pelicula->setFechaDeEstreno($valuesArray["release_date"]);
+
+						array_push($peliculaList, $pelicula);				
+					}
+				}
 			}
 		}
 		return $peliculaList;
 	}
 
-	public function AddToDatabase($idTMDB)
-	{
-		if(!$this->loggedIn()) return false;
-		if(!$this->isAdmin()) return false;
-
-		$pelicula = new Pelicula();
-		$pelicula->setIdTMDB($idTMDB);
-		if($this->peliculaDAO->getByIdTMDB($pelicula) != NULL) return false;
-
-		$movie = $this->getMovieDetailsFromApi($idTMDB);
-		$flag = $this->peliculaDAO->add($movie);
-		if($flag) Functions::flash("Se agrego la pelicula correctamente.","success");
-		else Functions::flash("Se produjo un error al agregar la pelicula.","danger");
-		return $flag;
-	}
-
 	public function callSearchMovie($title)
 	{
+		if(!$this->loggedIn()) Functions::redirect("Home");
+		if(!$this->isAdmin()) Functions::redirect("Home");
+
 		$arrayReque = array("api_key" => API_KEY, "language" => LANGUAGE_ES, "query"=>$title);
 
 		$peliculaList=array();
 
-		$get_data = TMDBController::callAPI('GET', API . '/search/movie', $arrayReque);
+		$get_data = TMDBController::callAPI('GET', API . '/search/movie', $arrayReque);		
 
-		$arrayToDecode = json_decode($get_data, true);
-
-		foreach ($arrayToDecode["results"] as $valuesArray) 
+		if($get_data == null) Functions::flash("Se produjo un error de conexion con la API.","danger");
+		else
 		{
-			$pelicula = new Pelicula();
-			$pelicula->setIdTMDB($valuesArray["id"]);
-			if($this->peliculaDAO->getByIdTMDB($pelicula) == NULL)
-			{
-				if($valuesArray["poster_path"] != NULL)
-				{
-					$posterPath = "https://image.tmdb.org/t/p/w500".$valuesArray["poster_path"];
-				}
-				else 
-				{
-					$posterPath = FRONT_ROOT.IMG_PATH."noImage.jpg";
-				}
-				$pelicula->setPoster($posterPath);			
-				$pelicula->setTitulo($valuesArray["title"]);
-				$pelicula->setPopularidad($valuesArray["vote_average"]);
-				if(isset($valuesArray["release_date"]) && ($valuesArray["release_date"]!=NULL)){
-					$pelicula->setFechaDeEstreno($valuesArray["release_date"]);
-				}else{
-					$pelicula ->setFechaDeEstreno("0000-00-00");
-				};
+			$arrayToDecode = json_decode($get_data, true);
 
-				array_push($peliculaList, $pelicula);				
+			if(is_array($arrayToDecode) && !empty($arrayToDecode))
+			{
+				foreach ($arrayToDecode["results"] as $valuesArray) 
+				{
+					$pelicula = new Pelicula();
+					$pelicula->setIdTMDB($valuesArray["id"]);
+					if($this->peliculaDAO->getByIdTMDB($pelicula) == NULL)
+					{
+						if($valuesArray["poster_path"] != NULL)
+						{
+							$posterPath = "https://image.tmdb.org/t/p/w500".$valuesArray["poster_path"];
+						}
+						else 
+						{
+							$posterPath = FRONT_ROOT.IMG_PATH."noImage.jpg";
+						}
+						$pelicula->setPoster($posterPath);			
+						$pelicula->setTitulo($valuesArray["title"]);
+						$pelicula->setPopularidad($valuesArray["vote_average"]);
+						if(isset($valuesArray["release_date"]) && ($valuesArray["release_date"]!=NULL)){
+							$pelicula->setFechaDeEstreno($valuesArray["release_date"]);
+						}else{
+							$pelicula ->setFechaDeEstreno("0000-00-00");
+						};
+
+						array_push($peliculaList, $pelicula);				
+					}
+				}
 			}
 		}
 		return $peliculaList;
@@ -234,6 +229,9 @@ class PeliculaController extends Administrable
 
 	private function getMovieDetailsFromApi($idTMDB)
 	{
+		if(!$this->loggedIn()) Functions::redirect("Home");
+		if(!$this->isAdmin()) Functions::redirect("Home");
+
 		$arrayReque = array("api_key" => API_KEY, "language" => LANGUAGE_ES);
 
 		$get_data = TMDBController::callAPI('GET', API . '/movie'. '/' . $idTMDB, $arrayReque);
@@ -282,5 +280,21 @@ class PeliculaController extends Administrable
 			}
 		}
 		return $pelicula;
+	}
+
+	public function AddToDatabase($idTMDB)
+	{
+		if(!$this->loggedIn()) return false;
+		if(!$this->isAdmin()) return false;
+
+		$pelicula = new Pelicula();
+		$pelicula->setIdTMDB($idTMDB);
+		if($this->peliculaDAO->getByIdTMDB($pelicula) != NULL) return false;
+
+		$movie = $this->getMovieDetailsFromApi($idTMDB);
+		$flag = $this->peliculaDAO->add($movie);
+		if($flag) Functions::flash("Se agrego la pelicula correctamente.","success");
+		else Functions::flash("Se produjo un error al agregar la pelicula.","danger");
+		return $flag;
 	}
 }
