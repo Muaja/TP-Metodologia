@@ -54,8 +54,7 @@ class UsuarioController extends Administrable
 		//Lista de entradas
 		$entradaList = array();
 		$compraList = $this->compraDAO->getByUsuario($_SESSION['loggedUser']);
-		if($compraList == null) Functions::flash("Se produjo un error al obtener las compras del usuario.","warning");
-		else
+		if(is_array($compraList) && !empty($compraList))
 		{
 			foreach($compraList as $compra)
 			{
@@ -65,7 +64,6 @@ class UsuarioController extends Administrable
 			$funcion = new Funcion();
 			$pelicula = new Pelicula();
 		}
-
 		require_once(VIEWS_PATH."usuario/profile.php");
 	}
 
