@@ -6,7 +6,6 @@
 		private $id;
 		private $idUsuario;
 		private $fechaHora;
-		private $precio;
 		private $cantidad;
 		private $descuento;
 		private $total;
@@ -41,17 +40,6 @@
 		public function setFechaHora($fechaHora)
 		{
 			$this->fechaHora = $fechaHora;
-			return $this;
-		}
-
-		public function getPrecio()
-		{
-			return $this->precio;
-		}
-
-		public function setPrecio($precio)
-		{
-			$this->precio = $precio;
 			return $this;
 		}
 

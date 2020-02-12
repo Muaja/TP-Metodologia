@@ -2,40 +2,56 @@
 <div class="container-fluid mb-4">
     <div class="col-sm-12 col-md-10 offset-sm-0 offset-md-1 bg-dark-transparent text-white rounded shadow p-3">
         <?php require_once(VIEWS_PATH."alert.php"); ?>
-        <h2 class="col-sm-12 col-md-6 text-light pb-2 mb-2">Lista de entradas</h2>
-        <?php if(!empty($entradaList)) { ?>
-        <table id="sortable" class="table table-striped table-responsive-md text-white align-center">
+        <h2 class="col-sm-12 col-md-6 text-light pb-2 mb-2">Carrito de compras</h2>
+        <?php if(!empty($carritoList)) { ?>
+        <table class="table table-striped table-responsive-md text-light align-center">
             <thead>
                 <tr>
                     <th>#</th>
-                    <th># Compra</th>
                     <th>Pelicula</th>
-                    <th>Funcion</th>                    
-                    <th>QR</th>
-                    <th>Ver</th>
+                    <th>Cine</th>
+                    <th>Funcion</th>
+                    <th>Entradas</th>
+                    <th>Precio por entrada</th>
+                    <th>Eliminar</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($entradaList as $entrada) { ?>
+                <?php foreach ($carritoList as $id=>$carrito) { 
+                    $idFuncion = $carrito->getIdFuncion();
+                    $cantidad = $carrito->getCantidad();
+
+                    //Datos funcion
+                    $funcion->setId($idFuncion);
+                    $funcion = $this->funcionDAO->getFuncion($funcion);
+
+                    //Datos pelicula
+                    $pelicula->setId($funcion->getIdPelicula());
+                    $pelicula = $this->peliculaDAO->getPelicula($pelicula);
+
+                    //Datos cine			
+                    $idCine = $funcion->getIdCine();
+                    $cine->setId($idCine);
+                    $cine = $this->cineDAO->getCine($cine);
+
+                    //Datos sala
+                    $idSala = $funcion->getIdSala();
+                    $sala->setId($idSala);
+                    $sala = $this->salaDAO->getSala($sala);
+                ?>
                 <tr>
-                    <td class="align-middle"><?php echo $entrada->getId(); ?></td>
-                    <td class="align-middle"><?php echo $entrada->getIdCompra(); ?></td>
-                    <?php 
-                        $idFuncion = $entrada->getIdFuncion();
-                        $funcion->setId($idFuncion);
-                        $funcion = $this->funcionDAO->getFuncion($funcion);
-                        $idPelicula = $funcion->getIdPelicula();
-                        $pelicula->setId($idPelicula);
-                        $pelicula = $this->peliculaDAO->getPelicula($pelicula);
-                    ?>
-                    <td class="align-middle"><img src="<?php echo $pelicula->getPoster(); ?>"  height="35" width="35" class="rounded-circle z-depth-0 mr-2" alt="pelicula image"><b><?php echo $pelicula->getTitulo(); ?></b></a></td>
-                    <td class="align-middle"><?php echo $funcion->getFechaHora(); ?></td>                    
-                    <td class="align-middle"><a href="#modal<?php echo $entrada->getId();?>" class="view" title="" data-toggle="modal" data-original-title="View Details"><img src="https://chart.googleapis.com/chart?chs=60x60&cht=qr&chl=<?php echo $entrada->getQr(); ?>" class="rounded-circle z-depth-0" alt="qr"></a></td>
-                    <td class="align-middle"><a href="#modal<?php echo $entrada->getId();?>" class="view" title="" data-toggle="modal" data-original-title="View Details"><h4><i class="fa fa-arrow-circle-right"></i></h4></a></td>
+                    <td><?php echo $id+1; ?></td>
+                    <td><img src="<?php echo $pelicula->getPoster(); ?>"  height="35" width="35" class="rounded-circle z-depth-0 mr-2" alt="pelicula image"><b><?php echo $pelicula->getTitulo(); ?></b></td>
+                    <td><?php echo $cine->getNombre(); ?></td>
+                    <td><?php echo $funcion->getFechaHora(); ?></td>
+                    <td><?php echo $cantidad ?></td>
+                    <td>$ <?php echo $sala->getPrecio(); ?></td>
+                    <td><a href="<?php echo FRONT_ROOT ?>Carrito/Remove/<?php echo $carrito->getId();?>" class="view" title="" data-toggle="tooltip" data-original-title="View Details"><h4><i class="fa fa-minus-circle text-danger"></i></h4></a></td>
                 </tr>
                 <?php } ?>
             </tbody>
         </table>
+        <a class="btn btn-success btn-block mt-2" href="<?php echo FRONT_ROOT ?>Compra/ShowPayView" role="button"><i class="fa fa-shopping-bag"></i> Comprar ahora</a>
         <?php } else { ?>
         <div class="container-fluid">
             <div class="alert alert-danger mt-3" role="alert">
@@ -53,16 +69,17 @@
                     </svg>
                 </div>
                 <div class="col col-auto">
-                    <h4 class="alert-heading">No existen entradas vendidas.</h4>
+                    <h4 class="alert-heading">Tu carrito de compras esta vacío.</h4>
                     <ul>
                     <li>
-                        Cuando un usuario realice la compra de una entrada aparacera aquí.
+                        Agrega entradas a diferentes funciones para poder abonarlas todas juntas.
                     </li>
                     </ul>
                 </div>
                 </div>
             </div>
         </div>
+        <a class="btn btn-primary btn-block mt-2" href="<?php echo FRONT_ROOT ?>Funcion/ShowMovies" role="button"><i class="fa fa-film"></i> Ver funciones disponibles</a>
         <?php } ?>
     </div>
 </div>
@@ -70,22 +87,8 @@
     $(document).ready(function() {
         $('#sortable').DataTable( {
         "columnDefs": [
-            { "orderable": false, "targets": [4,5]}
+            { "orderable": false, "targets": 5 }
         ]
         } );
     } );
 </script>
-
-<!-- Modal que muestra entrada -->
-<?php 
-foreach($entradaList as $entrada) 
-{
-    $idFuncion = $entrada->getIdFuncion();
-    $funcion->setId($idFuncion);
-    $funcion = $this->funcionDAO->getFuncion($funcion);
-    $idPelicula = $funcion->getIdPelicula();
-    $pelicula->setId($idPelicula);
-    $pelicula = $this->peliculaDAO->getPelicula($pelicula);
-    require(VIEWS_PATH."entrada/entrada.php");
-}
-?>
