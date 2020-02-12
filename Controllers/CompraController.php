@@ -195,8 +195,8 @@
 				$entrada->setQr($idCine."-".$idSala."-".$idFuncion."-".$idCompra."-".$i);
 				array_push($listEntradas, $entrada);
 				if(!$this->entradaDAO->add($entrada)) Functions::flash("Se produjo un error al registrar la entrada ".$i.".","danger");	
+				else Functions::flash("Se registro la entrada ".$i." para ver ".$pelicula->getTitulo()."!", "success");
 			}
-			Functions::flash("Se completo la compra de ".$cantidad." entrada(s) para ver ".$pelicula->getTitulo()."!", "success");
 			
 			$subject = "Movie Pass - Tus entradas para ver ".$pelicula->getTitulo();
 
@@ -205,9 +205,9 @@
 			$emailDetails['fechaHora'] = $fechaHora;
 			$emailDetails['cine'] = $cine->getNombre();
 			$emailDetails['sala'] = $sala->getNombre();
-			$emailDetails['idCompra'] = $idCompra;
-		
+			$emailDetails['idCompra'] = $idCompra;		
 			Functions::sendEmail($_SESSION['loggedUser']->getEmail(),$subject, $this->compraMailBody($emailDetails));
+			
 			Functions::redirect("Entrada","ShowListView", $_SESSION['loggedUser']->getId());
 		}
 
