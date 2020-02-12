@@ -102,7 +102,7 @@
 			{
 				$list = array();
 				
-				$query = "SELECT DISTINCT id_pelicula FROM " . $this->tableName. " WHERE (fecha_hora > now()) AND deleted = 0";
+				$query = "SELECT DISTINCT id_pelicula FROM ".$this->tableName." WHERE (fecha_hora > now()) AND deleted = 0";
 				$this->connection = Connection::GetInstance();
 				$resultSet = $this->connection->Execute($query);
 
@@ -130,8 +130,8 @@
 					date_add($end, date_interval_create_from_date_string('1 days'));
 				}
 
-				$query="SELECT DISTINCT f.id_pelicula FROM ".$this->tableName. " f";
-				if($genre != null) $query=$query." JOIN ".$this->peliculasPorGenerosTableName ." pxg ON f.id_pelicula = pxg.id_pelicula";
+				$query="SELECT DISTINCT f.id_pelicula FROM ".$this->tableName." f";
+				if($genre != null) $query=$query." JOIN ".$this->peliculasPorGenerosTableName." pxg ON f.id_pelicula = pxg.id_pelicula";
 				$query = $query." WHERE deleted = 0";
 				if($genre != null) $query = $query." AND pxg.id_genero = ". $genre;
 				if($inicio != null && $fin != null) $query = $query." AND fecha_hora BETWEEN '" . $inicio . "' AND '".$fin."'";
