@@ -35,7 +35,6 @@
 			if(!$this->isAdmin()) Functions::redirect("Home");
 
 			$cineList = $this->cineDAO->getAll();
-			if($cineList == null) Functions::flash("Se produjo un error al obtener los cines.","warning");
 			require_once(VIEWS_PATH."cine/cine-list.php");
 		}
 
