@@ -12,7 +12,7 @@
 	define("IMG_PATH", VIEWS_PATH."img/");
 
 	define("API", "https://api.themoviedb.org/3");
-	define("API_KEY", "6a65158231eaaf71a3446b747cff20ec");
+	define("API_KEY", "6c4d7478d37e81e058b28cccc1ba1fc5");
 	define("LANGUAGE_ES", "es");
 
 	define("FACEBOOK_API", "417391325441189");
