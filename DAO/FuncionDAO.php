@@ -16,7 +16,7 @@
 		{
 			try 
 			{
-				$query = "INSERT INTO " . $this->tableName . " (id_cine, id_sala, id_pelicula, fecha_hora) VALUES (:id_cine, :id_sala, :id_pelicula, :fecha_hora);";
+				$query = "INSERT INTO ".$this->tableName." (id_cine, id_sala, id_pelicula, fecha_hora) VALUES (:id_cine, :id_sala, :id_pelicula, :fecha_hora);";
 
 				$parameters["id_cine"] = $funcion->getIdCine();
 				$parameters["id_sala"] = $funcion->getIdSala();
@@ -37,7 +37,7 @@
 		{
 			try 
 			{
-				$query = "UPDATE " . $this->tableName . " SET deleted = 1 WHERE id_funcion = :id_funcion;";
+				$query = "UPDATE ".$this->tableName." SET deleted = 1 WHERE id_funcion = :id_funcion;";
 
 				$parameters['id_funcion'] = $funcion->getId();
 
@@ -161,7 +161,7 @@
 		{
 			try 
 			{
-				$query = "SELECT * FROM " . $this->tableName . " WHERE id_funcion = '" . $funcion->getId() ."' AND deleted = 0";
+				$query = "SELECT * FROM ".$this->tableName." WHERE id_funcion = '" . $funcion->getId() ."' AND deleted = 0";
 				$this->connection = Connection::GetInstance();
 				$resultSet = $this->connection->Execute($query);
 
@@ -187,7 +187,7 @@
 			{
 				$list = array();
 
-				$query = "SELECT * FROM " . $this->tableName . " WHERE id_cine = " . $cine->getId() ." AND deleted = 0";
+				$query = "SELECT * FROM ".$this->tableName." WHERE id_cine = " . $cine->getId() ." AND deleted = 0";
 				if($inicio != null && $fin != null) $query = $query." AND fecha_hora BETWEEN '" . $inicio . "' and '".$fin."'";
 				else if($inicio != null) $query = $query." AND fecha_hora >= '" . $inicio . "'";
 				else if($fin != null) $query = $query." AND fecha_hora <= '" . $fin . "'";
@@ -219,7 +219,7 @@
 			{
 				$list = array();
 
-				$query = "SELECT * FROM " . $this->tableName . " WHERE id_cine = " . $cine->getId() . " AND id_sala = " . $sala->getId()." AND deleted = 0";
+				$query = "SELECT * FROM ".$this->tableName." WHERE id_cine = " . $cine->getId() . " AND id_sala = " . $sala->getId()." AND deleted = 0";
 				if($inicio != null && $fin != null) $query = $query." AND fecha_hora BETWEEN '" . $inicio . "' and '".$fin."'";
 				else if($inicio != null) $query = $query." AND fecha_hora >= '" . $inicio . "'";
 				else if($fin != null) $query = $query." AND fecha_hora <= '" . $fin . "'";
@@ -251,7 +251,7 @@
 			{
 				$list = array();
 
-				$query = "SELECT * FROM " . $this->tableName . " WHERE id_pelicula = " . $pelicula->getId()." AND deleted = 0";
+				$query = "SELECT * FROM ".$this->tableName." WHERE id_pelicula = " . $pelicula->getId()." AND deleted = 0";
 				if($inicio != null && $fin != null) $query = $query." AND fecha_hora BETWEEN '" . $inicio . "' and '".$fin."'";
 				else if($inicio != null) $query = $query." AND fecha_hora >= '" . $inicio . "'";
 				else if($fin != null) $query = $query." AND fecha_hora <= '" . $fin . "'";
@@ -285,7 +285,7 @@
 			{
 				$list = array();
 
-				$query = "SELECT * FROM " . $this->tableName . " WHERE id_cine = " . $cine->getId() . " AND id_pelicula = " . $pelicula->getId();
+				$query = "SELECT * FROM ".$this->tableName." WHERE id_cine = " . $cine->getId() . " AND id_pelicula = " . $pelicula->getId();
 				if($inicio != null && $fin != null) $query = $query." AND fecha_hora BETWEEN '" . $inicio . "' and '".$fin."'";
 				else if($inicio != null) $query = $query." AND fecha_hora >= '" . $inicio . "'";
 				else if($fin != null) $query = $query." AND fecha_hora <= '" . $fin . "'";
@@ -318,7 +318,7 @@
 			{
 				$list = array();
 
-				$query = "SELECT * FROM " . $this->tableName . " WHERE deleted = 0";
+				$query = "SELECT * FROM ".$this->tableName." WHERE deleted = 0";
 				if($inicio != null && $fin != null) $query = $query." AND fecha_hora BETWEEN '" . $inicio . "' and '".$fin."'";
 				else if($inicio != null) $query = $query." AND fecha_hora >= '" . $inicio . "'";
 				else if($fin != null) $query = $query." AND fecha_hora <= '" . $fin . "'";
@@ -349,7 +349,7 @@
 			try 
 			{
 				$list = array();
-				$query = "SELECT id_cine, id_sala FROM " . $this->tableName . " WHERE id_pelicula = " . $idPelicula . " AND deleted = 0 AND fecha_hora LIKE '" . $fecha . "%';";
+				$query = "SELECT id_cine, id_sala FROM ".$this->tableName." WHERE id_pelicula = " . $idPelicula . " AND deleted = 0 AND fecha_hora LIKE '" . $fecha . "%';";
 				$this->connection = Connection::GetInstance();
 				$resultSet = $this->connection->Execute($query);
 
@@ -373,7 +373,7 @@
 			try 
 			{
 				$list = array();
-				$query = "SELECT DISTINCT id_cine, id_pelicula FROM " . $this->tableName . " WHERE id_pelicula = '" . $idPelicula . "' AND deleted = 0 AND fecha_hora>= NOW();";
+				$query = "SELECT DISTINCT id_cine, id_pelicula FROM ".$this->tableName." WHERE id_pelicula = '" . $idPelicula . "' AND deleted = 0 AND fecha_hora>= NOW();";
 				$this->connection = Connection::GetInstance();
 				$resultSet = $this->connection->Execute($query);
 
@@ -396,7 +396,7 @@
 		{
 			try 
 			{
-				$query = "UPDATE " . $this->tableName . " SET id_cine = :id_cine, id_sala = :id_sala, id_pelicula = :id_pelicula, fecha_hora = :fecha_hora WHERE id_funcion = :id_funcion;";
+				$query = "UPDATE ".$this->tableName." SET id_cine = :id_cine, id_sala = :id_sala, id_pelicula = :id_pelicula, fecha_hora = :fecha_hora WHERE id_funcion = :id_funcion;";
 
 				$parameters["id_cine"] = $funcion->getIdCine();
 				$parameters["id_sala"] = $funcion->getIdSala();

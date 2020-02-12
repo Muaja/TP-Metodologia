@@ -13,7 +13,7 @@
         {
             try 
             {
-                $query = "INSERT INTO " . $this->tableName . " (id_cine, nombre, precio, capacidad) VALUES (:id_cine, :nombre, :precio, :capacidad);";
+                $query = "INSERT INTO ".$this->tableName." (id_cine, nombre, precio, capacidad) VALUES (:id_cine, :nombre, :precio, :capacidad);";
 
                 $parameters["id_cine"] = $sala->getIdCine();
                 $parameters["nombre"] = $sala->getNombre();
@@ -34,7 +34,7 @@
         {
             try 
             {
-                $query = "UPDATE " . $this->tableName . " SET deleted = 1 WHERE id_sala = :id_sala;";
+                $query = "UPDATE ".$this->tableName." SET deleted = 1 WHERE id_sala = :id_sala;";
 
                 $parameters['id_sala'] = $sala->getId();
 
@@ -53,7 +53,7 @@
             try 
             {
                 $list = array();
-                $query = "SELECT * FROM " . $this->tableName." WHERE deleted = 0;";
+                $query = "SELECT * FROM ".$this->tableName." WHERE deleted = 0;";
                 $this->connection = Connection::GetInstance();
                 $resultSet = $this->connection->Execute($query);
 
@@ -79,7 +79,7 @@
         {
             try 
             {
-                $query = "SELECT * FROM " . $this->tableName . " WHERE id_sala = '" . $sala->getId() . "' AND deleted = 0;";
+                $query = "SELECT * FROM ".$this->tableName." WHERE id_sala = '" . $sala->getId() . "' AND deleted = 0;";
                 $this->connection = Connection::GetInstance();
                 $resultSet = $this->connection->Execute($query);
 
@@ -104,7 +104,7 @@
             try 
             {
                 $list = array();
-                $query = "SELECT * FROM " . $this->tableName . " WHERE id_cine = '" . $cine->getId() . "' AND deleted = 0;";
+                $query = "SELECT * FROM ".$this->tableName." WHERE id_cine = '" . $cine->getId() . "' AND deleted = 0;";
                 $this->connection = Connection::GetInstance();
                 $resultSet = $this->connection->Execute($query);
 
@@ -130,7 +130,7 @@
         {
             try 
             {
-                $query = "UPDATE " . $this->tableName . " SET id_cine = :id_cine, nombre = :nombre, precio = :precio, capacidad = :capacidad WHERE id_sala = :id_sala;";
+                $query = "UPDATE ".$this->tableName." SET id_cine = :id_cine, nombre = :nombre, precio = :precio, capacidad = :capacidad WHERE id_sala = :id_sala;";
 
                 $parameters["id_cine"] = $sala->getIdCine();
                 $parameters["nombre"] = $sala->getNombre();

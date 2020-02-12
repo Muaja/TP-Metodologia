@@ -17,7 +17,7 @@
 			try 
 			{
 				$list = array();
-				$query = "SELECT * FROM " . $this->tableName." WHERE deleted = 0 ORDER BY titulo ASC;";
+				$query = "SELECT * FROM ".$this->tableName." WHERE deleted = 0 ORDER BY titulo ASC;";
 				$this->connection = Connection::GetInstance();
 				$resultSet = $this->connection->Execute($query);
 
@@ -51,7 +51,7 @@
 		{
 			try 
 			{
-				$query = "INSERT INTO " . $this->tableName . " (id_TMDB, titulo, duracion, descripcion, idioma, clasificacion, fechaDeEstreno, poster, video, popularidad) VALUES (:id_TMDB, :titulo, :duracion, :descripcion, :idioma, :clasificacion, :fechaDeEstreno, :poster, :video, :popularidad);";
+				$query = "INSERT INTO ".$this->tableName." (id_TMDB, titulo, duracion, descripcion, idioma, clasificacion, fechaDeEstreno, poster, video, popularidad) VALUES (:id_TMDB, :titulo, :duracion, :descripcion, :idioma, :clasificacion, :fechaDeEstreno, :poster, :video, :popularidad);";
 				$parameters["id_TMDB"] = $pelicula->getIdTMDB();
 				$parameters["titulo"] = $pelicula->getTitulo();
 				$parameters["duracion"] = $pelicula->getDuracion();
@@ -83,12 +83,12 @@
 			{
 				$parameters["id_pelicula"] = $pelicula->getId();
 
-				$query = "UPDATE " . $this->tableName . " SET deleted = 1 WHERE id_pelicula = :id_pelicula;";				
+				$query = "UPDATE ".$this->tableName." SET deleted = 1 WHERE id_pelicula = :id_pelicula;";				
 
 				$this->connection = Connection::GetInstance();
 				$this->connection->ExecuteNonQuery($query,$parameters);
 
-				$query = "UPDATE " . $this->generoTableName . " SET deleted = 1 WHERE id_pelicula = :id_pelicula;";
+				$query = "UPDATE ".$this->generoTableName." SET deleted = 1 WHERE id_pelicula = :id_pelicula;";
 
 				$this->connection = Connection::GetInstance();
 				$this->connection->ExecuteNonQuery($query,$parameters);
@@ -137,7 +137,7 @@
 		{
 			try
 			{
-				$query = "SELECT * FROM " . $this->generoTableName . " WHERE id_pelicula = :id_pelicula AND deleted = 0;";
+				$query = "SELECT * FROM ".$this->generoTableName." WHERE id_pelicula = :id_pelicula AND deleted = 0;";
 				$parameters["id_pelicula"] = $pelicula->getId();
 				$this->connection = Connection::GetInstance();
 				$resultSet = $this->connection->Execute($query,$parameters);
@@ -161,7 +161,7 @@
 			{
 				foreach($generos as $genero)
 				{
-					$query = "INSERT INTO " . $this->generoTableName . " (id_pelicula, id_genero) VALUES (:id_pelicula, :id_genero);";
+					$query = "INSERT INTO ".$this->generoTableName." (id_pelicula, id_genero) VALUES (:id_pelicula, :id_genero);";
 					$parameters["id_pelicula"] = $pelicula->getId();
 					$parameters["id_genero"] = $genero;
 
@@ -213,7 +213,7 @@
 		{
 			try 
 			{
-				$query = "UPDATE " . $this->tableName . " SET id_TMDB = :id_TMDB, titulo = :titulo, duracion = :duracion, descripcion = :descripcion, idioma = :idioma, clasificacion = :clasificacion, fechaDeEstreno = :fechaDeEstreno, poster = :poster, video = :video, popularidad = :popularidad WHERE id_pelicula = :id_pelicula;";
+				$query = "UPDATE ".$this->tableName." SET id_TMDB = :id_TMDB, titulo = :titulo, duracion = :duracion, descripcion = :descripcion, idioma = :idioma, clasificacion = :clasificacion, fechaDeEstreno = :fechaDeEstreno, poster = :poster, video = :video, popularidad = :popularidad WHERE id_pelicula = :id_pelicula;";
 				$parameters["id_TMDB"] = $pelicula->getIdTMDB();
 				$parameters["titulo"] = $pelicula->getTitulo();
 				$parameters["duracion"] = $pelicula->getDuracion();

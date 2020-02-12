@@ -21,7 +21,7 @@ class EstadisticaDAO
     {
         try 
         {
-            $query = "SELECT COUNT(id_entrada) AS 'cantidad' FROM " . $this->tableNameEntradas .
+            $query = "SELECT COUNT(id_entrada) AS 'cantidad' FROM ".$this->tableNameEntradas.
             " WHERE id_funcion = :id_funcion;";
             
             $parameters["id_funcion"] = $funcion->getId();
@@ -45,9 +45,9 @@ class EstadisticaDAO
     {
         try 
         {
-            $query = "SELECT ((SELECT capacidad FROM " . $this->tableNameFunciones . 
-            " JOIN " . $this->tableNameSalas . " ON (" . $this->tableNameFunciones . ".id_sala = " . $this->tableNameSalas . ".id_sala) WHERE id_funcion = :id_funcion ) - COUNT(id_entrada)) as 'remanente' FROM " . $this->tableNameEntradas . 
-            " JOIN " . $this->tableNameCompras . " ON (" . $this->tableNameEntradas . ".id_compra = " . $this->tableNameCompras . ".id_compra)".
+            $query = "SELECT ((SELECT capacidad FROM ".$this->tableNameFunciones.
+            " JOIN ".$this->tableNameSalas." ON (".$this->tableNameFunciones.".id_sala = ".$this->tableNameSalas.".id_sala) WHERE id_funcion = :id_funcion ) - COUNT(id_entrada)) as 'remanente' FROM ".$this->tableNameEntradas.
+            " JOIN ".$this->tableNameCompras." ON (".$this->tableNameEntradas.".id_compra = ".$this->tableNameCompras.".id_compra)".
             " WHERE id_funcion = :id_funcion;";
             
             $parameters['id_funcion'] = $funcion->getId();
@@ -72,8 +72,8 @@ class EstadisticaDAO
         try 
         {
             $query = "SELECT SUM(totalfuncion) as recaudacion FROM".
-            " (SELECT DISTINCT SUM(total) AS totalfuncion FROM " . $this->tableNameEntradas . " e".
-            " JOIN " . $this->tableNameCompras . " c ON e.id_compra = c.id_compra"
+            " (SELECT DISTINCT SUM(total) AS totalfuncion FROM ".$this->tableNameEntradas." e".
+            " JOIN ".$this->tableNameCompras." c ON e.id_compra = c.id_compra"
             ." WHERE id_funcion = :id_funcion GROUP BY e.id_entrada) as r";
             
             $parameters["id_funcion"] = $funcion->getId();

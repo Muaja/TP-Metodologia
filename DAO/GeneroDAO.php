@@ -14,7 +14,7 @@
         {
             try 
             {
-                $query = "INSERT INTO " . $this->tableName . " (id_genero, nombre) VALUES (:id_genero, :nombre);";
+                $query = "INSERT INTO ".$this->tableName." (id_genero, nombre) VALUES (:id_genero, :nombre);";
 
                 $parameters["id_genero"] = $genero->getId();
                 $parameters["nombre"] = $genero->getNombre();
@@ -33,7 +33,7 @@
         {
             try 
             {
-                $query = "UPDATE " . $this->tableName . " SET deleted = 1 WHERE id_genero = :id_genero;";
+                $query = "UPDATE ".$this->tableName." SET deleted = 1 WHERE id_genero = :id_genero;";
                 $parameters["id_genero"] = $genero->getId();
                 $this->connection = Connection::GetInstance();
                 $this->connection->ExecuteNonQuery($query,$parameters);
@@ -50,7 +50,7 @@
             try 
             {
                 $list = array();
-                $query = "SELECT * FROM " . $this->tableName . " WHERE deleted = 0 ORDER BY nombre;";
+                $query = "SELECT * FROM ".$this->tableName." WHERE deleted = 0 ORDER BY nombre;";
                 $this->connection = Connection::GetInstance();
                 $resultSet = $this->connection->Execute($query);
 
@@ -73,7 +73,7 @@
         {
             try 
             {
-                $query = "SELECT * FROM " . $this->tableName . " WHERE id_genero = :id_genero AND deleted = 0;";
+                $query = "SELECT * FROM ".$this->tableName." WHERE id_genero = :id_genero AND deleted = 0;";
                 $parameters["id_genero"] = $genero->getId();
                 $this->connection = Connection::GetInstance();
                 $resultSet = $this->connection->Execute($query,$parameters);
