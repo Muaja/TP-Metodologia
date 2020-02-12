@@ -1,5 +1,5 @@
     <div class="container-fluid mb-4">
-        <div class="col-md-10 offset-sm-0 offset-md-1 bg-custom-transparent rounded shadow p-2">
+        <div class="col-md-10 offset-sm-0 offset-md-1 bg-custom-transparent rounded shadow p-3">
             <div class="container-fluid my-4">
 
                 <div class="row my-4">
