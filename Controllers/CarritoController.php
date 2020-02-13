@@ -67,7 +67,7 @@
 
 			if($this->carritoDAO->add($carrito) != null) Functions::flash("La compra se agrego al carrito correctamente.","success");
             else Functions::flash("Se produjo un error al agregar la compra al carrito.","danger");
-            Functions::redirect("Carrito", "ShowCarritoView");
+            Functions::redirect("Funcion", "ShowMovies");
 		}
     }
 ?>
