@@ -28,7 +28,7 @@
     </td>
     <?php if(isset($idPelicula) && $idPelicula != null) { ?>
         <form action="<?php echo FRONT_ROOT ?>Compra/Submit" method="POST">
-            <td style="text-align:right; width:35%">
+            <td style="text-align:right">
                 <input type="hidden" name="idFuncion" value="<?php echo $funcion->getId(); ?>">
                 <input type="number" class="form-control d-inline align-middle col-2 input-sm" name="cantidad" value="1" min="1" max=<?php echo ($sala->getCapacidad()-$entradasVendidas) ?> required>
 
